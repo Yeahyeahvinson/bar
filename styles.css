@@ -1,0 +1,466 @@
+:root {
+    --primary-bg: #000819;
+    --secondary-bg: #001529;
+    --up-color: #00ff00;
+    --down-color: #ff0000;
+    --neutral-color: #ffffff;
+    --border-color: #1a3958;
+    --text-color: #fff;
+    --ticker-height: 120px;
+}
+
+@font-face {
+    font-family: 'Digital';
+    src: url('https://fonts.cdnfonts.com/css/ds-digital') format('woff2');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden;
+    line-height: 1;
+}
+
+/* 网格视图 */
+.grid-view {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+}
+
+.grid-view.active {
+    display: block;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 顶部股票代码区 */
+.ticker-strip {
+    height: var(--ticker-height);
+    background: var(--primary-bg);
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.ticker-content {
+    display: inline-flex;
+    animation: scroll 60s linear infinite;
+}
+
+.ticker-item {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    height: var(--ticker-height);
+    border-right: 1px solid var(--border-color);
+    min-width: 300px;
+}
+
+.ticker-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ticker-code {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.ticker-name {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.ticker-price {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.ticker-change {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 广告区域 */
+.ad-container {
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    margin: 10px;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+.ad-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.ad-slide.active {
+    opacity: 1;
+}
+
+.ad-content {
+    text-align: center;
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    width: 80%;
+    max-width: 800px;
+}
+
+.ad-content div:first-child {
+    font-size: 42px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.ad-content div:last-child {
+    font-size: 32px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* 产品网格 */
+.products-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border-color);
+    overflow: hidden;
+    position: relative;
+}
+
+.products-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    transition: transform 1s linear;
+    will-change: transform;
+}
+
+/* 产品卡片 */
+.product-card {
+    background: var(--primary-bg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: calc(25vh - 46px);
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.product-card:hover {
+    background: var(--secondary-bg);
+    transform: scale(1.02);
+}
+
+.product-info {
+    margin-bottom: 10px;
+}
+
+.product-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 36px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.change-rate {
+    font-size: 24px;
+}
+
+.mini-chart {
+    flex: 1;
+    position: relative;
+    margin-top: 10px;
+}
+
+.mini-chart svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.mini-chart svg polyline {
+    stroke-width: 1;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+}
+
+/* 涨跌颜色样式 */
+.up {
+    color: var(--up-color);
+    text-shadow: 0 0 10px var(--up-color);
+}
+
+.down {
+    color: var(--down-color);
+    text-shadow: 0 0 10px var(--down-color);
+}
+
+/* 动画效果 */
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+@keyframes flash {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+.flash {
+    animation: flash 0.5s ease-in-out;
+}
+
+/* 响应式布局 */
+@media screen and (min-width: 2560px) {
+    .products-container {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    .product-name {
+        font-size: 32px;
+    }
+    .product-price {
+        font-size: 48px;
+    }
+    .change-rate {
+        font-size: 32px;
+    }
+}
+
+@media screen and (max-width: 1920px) {
+    .products-container {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media screen and (max-width: 1366px) {
+    .products-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .product-name {
+        font-size: 20px;
+    }
+    .product-price {
+        font-size: 32px;
+    }
+    .change-rate {
+        font-size: 20px;
+    }
+}
+
+/* Logo样式 */
+.logo {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    height: 80px;
+    background: url('logo.png') no-repeat center;
+    background-size: contain;
+    z-index: 10;
+}
+
+/* 视图切换按钮 */
+.view-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.view-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* 全屏单品详细视图 */
+.detail-view {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--primary-bg);
+    z-index: 900;
+}
+
+.detail-view.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-header {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    background: linear-gradient(to right, var(--primary-bg), var(--secondary-bg));
+}
+
+.detail-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detail-code {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.detail-name {
+    font-size: 32px;
+    opacity: 0.8;
+}
+
+.detail-price {
+    font-size: 72px;
+    font-weight: bold;
+}
+
+.detail-change {
+    font-size: 36px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-chart {
+    flex: 1;
+    padding: 20px;
+    position: relative;
+}
+
+.chart-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.price-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--border-color);
+}
+
+.price-point {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+
+.trend-line {
+    position: absolute;
+    height: 2px;
+    transition: all 0.3s ease;
+}
+
+/* 产品选择器 */
+.product-selector {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.product-selector-item {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.product-selector-item:hover,
+.product-selector-item.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.detail-chart svg polyline {
+    stroke-width: 2;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+}
+
+.item-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.en-name {
+    font-size: 0.8em;
+    color: #888;
+    font-weight: normal;
+} 

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>饮品交易平台 - 后台管理</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --panel-bg: #2a2a2a;
+            --text-color: #ffffff;
+            --border-color: #3a3a3a;
+            --button-bg: #4a4a4a;
+            --button-hover: #5a5a5a;
+            --up-color: #00ff00;
+            --down-color: #ff0000;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .control-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        button {
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: var(--button-hover);
+        }
+
+        .product-item {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .product-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .status-active {
+            background-color: #2a5a2a;
+            color: #00ff00;
+        }
+
+        .status-sold-out {
+            background-color: #5a2a2a;
+            color: #ff0000;
+        }
+
+        .status-hidden {
+            background-color: #2a2a2a;
+            color: #888;
+        }
+
+        .trend-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--panel-bg);
+            border-radius: 4px;
+        }
+
+        #status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--panel-bg);
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        #status.active {
+            display: block;
+        }
+
+        .add-product-form {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .add-product-form h3 {
+            margin-top: 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .update-single-btn {
+            background-color: #2a5a2a;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .update-single-btn:hover {
+            background-color: #3a6a3a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>饮品交易平台 - 后台管理</h1>
+        
+        <div class="panel">
+            <h2>全局控制设置</h2>
+            <div class="control-group">
+                <label>基础波动率 (%)</label>
+                <input type="number" id="baseVolatility" min="0" max="100" step="1">
+            </div>
+            <div class="control-group">
+                <label>价格更新间隔 (毫秒)</label>
+                <input type="number" id="updateInterval" min="1000" max="20000" step="100">
+            </div>
+            <div class="control-group">
+                <label>滚动速度 (每秒移动产品数)</label>
+                <input type="number" id="scrollSpeed" min="0.1" max="5" step="0.1">
+            </div>
+            <button onclick="updateGlobalSettings()">应用设置</button>
+        </div>
+
+        <div class="panel">
+            <h2>新增产品</h2>
+            <div class="add-product-form">
+                <div class="form-row">
+                    <div class="control-group">
+                        <label>产品代码</label>
+                        <input type="text" id="newCode" placeholder="例如: BC21">
+                    </div>
+                    <div class="control-group">
+                        <label>中文名称</label>
+                        <input type="text" id="newName" placeholder="例如: 新口味啤酒">
+                    </div>
+                    <div class="control-group">
+                        <label>英文名称</label>
+                        <input type="text" id="newEnName" placeholder="例如: New Flavor Beer">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="control-group">
+                        <label>基准价格 (元/10ml)</label>
+                        <input type="number" id="newBasePrice" min="0.3" max="1.6" step="0.01">
+                    </div>
+                    <div class="control-group">
+                        <label>波动率 (%)</label>
+                        <input type="number" id="newVolatility" min="0" max="100" step="1">
+                    </div>
+                    <div class="control-group">
+                        <label>趋势 (%)</label>
+                        <input type="number" id="newTrend" min="-50" max="20" step="1">
+                    </div>
+                </div>
+                <button onclick="addNewProduct()">添加产品</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>产品管理</h2>
+            <div id="productList"></div>
+            <button onclick="updateAllProducts()">更新所有产品</button>
+        </div>
+    </div>
+
+    <div id="status"></div>
+    <script src="admin.js"></script>
+</body>
+</html> 
